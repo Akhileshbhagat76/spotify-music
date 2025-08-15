@@ -39,19 +39,18 @@ It demonstrates strong **UI/UX design** skills, front-end development expertise,
 
 ---
 
-## 📸 Screenshots
 
-### 🎼 Home Page
-![<img width="1888" height="877" alt="image" src="https://github.com/user-attachments/assets/e294ba42-f040-4fd4-bce9-a80bf438e68e" />
-](https://akhileshbhagat76.github.io/spotify-music/)
 
-### ▶️ Music Player in Action
-![Music Player](link-to-screenshot2)
+🎼 Home Page
+(https://akhileshbhagat76.github.io/spotify-music/)
+
+ ▶️ Music Player in Action
+https://akhileshbhagat76.github.io/spotify-music/New%20Releases.html
 
 ---
 
-## 🔗 Live Demo
-[View Live Project](https://your-live-demo-link.com)
+🔗 Live Demo
+(https://akhileshbhagat76.github.io/spotify-music/)
 
 ---
 
