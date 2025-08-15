@@ -58,4 +58,4 @@ https://akhileshbhagat76.github.io/spotify-music/New%20Releases.html
 
 1. **Clone the repository**  
    ```bash
-   git clone https://github.com/your-username/spotify-clone.git
+  https://akhileshbhagat76.github.io/spotify-music/index.html
