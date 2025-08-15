@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Clone - Recently played</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .like-btn {
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .song-row:hover .like-btn {
+            opacity: 1;
+        }
+        .active-like {
+            color: #1db954 !important;
+            opacity: 1 !important;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+         <!-- Sidebar Navigation -->
+        <div class="sidebar w-64 p-4 hidden md:block">
+            <div class="logo mb-8">
+                <img src="spotify.png" alt="Melodify logo in green with musical note icon" class="h-20 mx-auto" />
+            </div>
+            <nav class="space-y-6">
+                <div class="nav-item">
+                    <a href="index.html" class="flex items-center text-gray-300 hover:text-white">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                        </svg>
+                        Home
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="flex items-center text-gray-300 hover:text-white">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                        </svg>
+                        Browse
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="flex items-center text-gray-300 hover:text-white">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"></path>
+                        </svg>
+                        Radio
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="user profile.html" class="flex items-center text-gray-300 hover:text-white">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 2a6 6 0 110 12A6 6 0 0110 4zM9.293 7.293a1 1 0 011.414 0l3.586 3.586a1 1 0 01-1.414 1.414L10 9.414l-2.879 2.879a1 1 0 01-1.414-1.414l3.586-3.586z"></path>
+                        </svg>
+                       User Profile
+                    </a>
+                </div>
+                <div class="pt-8">
+                    <div class="text-gray-500 text-sm uppercase mb-4">Your Library</div>
+                    <div class="space-y-4">
+                        <a href="Liked Songs.html" class="block text-gray-300 hover:text-white">Liked Songs</a>
+                        <a href="Recently Played.html" class="block text-gray-300 hover:text-white">Recently Played</a>
+                        <a href="Your Playlists.html" class="block text-gray-300 hover:text-white">Your Playlists</a>
+                        <a href="Followed Artists.html" class="block text-gray-300 hover:text-white">Followed Artists</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 bg-gradient-to-b from-gray-900 to-black overflow-y-auto">
+            <!-- Header -->
+            <header class="bg-gradient-to-b from-gray-800 to-transparent p-6">
+                <div class="flex justify-between items-center">
+                    <div class="flex space-x-4">
+                        <a href="Recently Played.html">
+                        <button class="bg-black bg-opacity-50 rounded-full p-2">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        </a>
+                        <a href="Followed Artists.html">
+                        <button class="bg-black bg-opacity-50 rounded-full p-2">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        </a>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="bg-white text-black rounded-full px-4 py-1 font-bold hover:bg-gray-200">
+                            Upgrade
+                        </button>
+                        <div class="flex items-center bg-black bg-opacity-70 rounded-full p-1">
+                            
+                            <img src="user.png" alt="User profile picture showing a young adult smiling" class="rounded-full h-8 w-8">
+                            <a href="user profile.html" class="text-white
+                            <span class="mx-2">Profile</span>
+                            </a>
+                            <i class="fas fa-chevron-down text-xs mr-1"></i>
+                            
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Liked Songs Section -->
+            <section class="p-6">
+                <div class="flex items-end space-x-6 mb-6">
+                    <div class="h-48 w-48 bg-gradient-to-br from-purple-600 to-blue-400 shadow-2xl flex items-center justify-center">
+                        <i class="fas fa-heart text-white text-6xl"></i>
+                    </div>
+                    <div>
+                        
+                        <p class="text-xs uppercase font-bold mb-2">Playlist</p>
+                        <h1 class="text-4xl md:text-6xl font-bold mb-6">Your Playlist</h1>
+                        <div class="flex items-center space-x-2 text-sm">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6b671be8-abf6-44f4-8295-2616c46dcee8.png" alt="User profile picture thumbnail showing a young adult" class="rounded-full h-6 w-6">
+                            <span class="font-bold">User</span>
+                            <span>•</span>
+                            <span>256 liked songs</span>
+                            <span>•</span>
+                            <span>14 hr 28 min</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Playback Controls -->
+                <div class="flex items-center space-x-6 mt-8 mb-6">
+                    <button class="bg-green-500 text-black rounded-full p-4 hover:bg-green-400">
+                        <i class="fas fa-play text-xl"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white">
+                        <i class="far fa-heart text-2xl"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white">
+                        <i class="fas fa-ellipsis-h text-2xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Songs List -->
+                <div class="mb-32">
+                    <div class="grid grid-cols-12 text-gray-400 text-sm border-b border-gray-800 pb-2 mb-4 px-4">
+                        <div class="col-span-1">#</div>
+                        <div class="col-span-5">TITLE</div>
+                        <div class="col-span-4">ALBUM</div>
+                        <div class="col-span-2 flex justify-end">DURATION</div>
+                    </div>
+                    
+                    <div id="songs-container">
+                        <!-- Song 1 -->
+                        <div class="song-row grid grid-cols-12 items-center text-sm py-2 px-4 rounded hover:bg-gray-800 group cursor-pointer">
+                            <div class="col-span-1 text-gray-400">1</div>
+                            <div class="col-span-5 flex items-center">
+                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1dc77f61-2d9c-438f-a0c2-65bcdf3cce02.png" alt="Album cover for the song Blinding Lights showing neon lights in dark background" class="h-10 w-10 mr-3">
+                                <div>
+                                    <p class="font-medium text-white group-hover:text-green-500">Blinding Lights</p>
+                                    <p class="text-gray-400 text-sm">The Weeknd</p>
+                                </div>
+                            </div>
+                            <div class="col-span-4 text-gray-400">After Hours</div>
+                            <div class="col-span-2 flex items-center justify-between">
+                                <button class="like-btn text-gray-400 hover:text-white">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <span class="text-gray-400">3:20</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Song 2 -->
+                        <div class="song-row grid grid-cols-12 items-center text-sm py-2 px-4 rounded hover:bg-gray-800 group cursor-pointer">
+                            <div class="col-span-1 text-gray-400">2</div>
+                            <div class="col-span-5 flex items-center">
+                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f0f450d9-3d25-471a-b1c8-23b9b43f0b48.png" alt="Album cover for the song Save Your Tears showing a sad clown with colorful makeup" class="h-10 w-10 mr-3">
+                                <div>
+                                    <p class="font-medium text-white group-hover:text-green-500">Save Your Tears</p>
+                                    <p class="text-gray-400 text-sm">The Weeknd</p>
+                                </div>
+                            </div>
+                            <div class="col-span-4 text-gray-400">After Hours</div>
+                            <div class="col-span-2 flex items-center justify-between">
+                                <button class="like-btn text-gray-400 hover:text-white">
+                                    <i class="fas fa-heart active-like"></i>
+                                </button>
+                                <span class="text-gray-400">3:35</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Song 3 -->
+                        <div class="song-row grid grid-cols-12 items-center text-sm py-2 px-4 rounded hover:bg-gray-800 group cursor-pointer">
+                            <div class="col-span-1 text-gray-400">3</div>
+                            <div class="col-span-5 flex items-center">
+                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7077455a-ac4d-4353-9653-cef4d5bea786.png" alt="Album cover for the song Levitating showing a floating city in space" class="h-10 w-10 mr-3">
+                                <div>
+                                    <p class="font-medium text-white group-hover:text-green-500">Levitating</p>
+                                    <p class="text-gray-400 text-sm">Dua Lipa</p>
+                                </div>
+                            </div>
+                            <div class="col-span-4 text-gray-400">Future Nostalgia</div>
+                            <div class="col-span-2 flex items-center justify-between">
+                                <button class="like-btn text-gray-400 hover:text-white">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <span class="text-gray-400">3:23</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Song 4 -->
+                        <div class="song-row grid grid-cols-12 items-center text-sm py-2 px-4 rounded hover:bg-gray-800 group cursor-pointer">
+                            <div class="col-span-1 text-gray-400">4</div>
+                            <div class="col-span-5 flex items-center">
+                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/823742b7-65a6-4bab-b344-4f9b9d7822af.png" alt="Album cover for the song Stay showing a couple in a nostalgic vintage photo" class="h-10 w-10 mr-3">
+                                <div>
+                                    <p class="font-medium text-white group-hover:text-green-500">Stay</p>
+                                    <p class="text-gray-400 text-sm">The Kid LAROI, Justin Bieber</p>
+                                </div>
+                            </div>
+                            <div class="col-span-4 text-gray-400">F*CK LOVE 3+</div>
+                            <div class="col-span-2 flex items-center justify-between">
+                                <button class="like-btn text-gray-400 hover:text-white">
+                                    <i class="fas fa-heart active-like"></i>
+                                </button>
+                                <span class="text-gray-400">2:21</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Song 5 -->
+                        <div class="song-row grid grid-cols-12 items-center text-sm py-2 px-4 rounded hover:bg-gray-800 group cursor-pointer">
+                            <div class="col-span-1 text-gray-400">5</div>
+                            <div class="col-span-5 flex items-center">
+                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9e236b6f-e712-4155-bef6-51817bdb30a8.png" alt="Album cover for the song good 4 u showing a pink background with handwritten text" class="h-10 w-10 mr-3">
+                                <div>
+                                    <p class="font-medium text-white group-hover:text-green-500">good 4 u</p>
+                                    <p class="text-gray-400 text-sm">Olivia Rodrigo</p>
+                                </div>
+                            </div>
+                            <div class="col-span-4 text-gray-400">SOUR</div>
+                            <div class="col-span-2 flex items-center justify-between">
+                                <button class="like-btn text-gray-400 hover:text-white">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <span class="text-gray-400">2:58</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <!-- Player Controls -->
+    <div class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 p-2 md:p-4 z-10">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center w-1/4">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/674245a3-f295-4ab0-9148-47d6d3eb7691.png" alt="Album cover for currently playing song" class="h-14 w-14 mr-3">
+                <div>
+                    <p class="text-sm font-medium text-white">Blinding Lights</p>
+                    <p class="text-xs text-gray-400">The Weeknd</p>
+                </div>
+                <button class="ml-4 text-gray-400 hover:text-white">
+                    <i class="far fa-heart"></i>
+                </button>
+            </div>
+            
+            <div class="flex-1 max-w-2xl">
+                <div class="flex justify-center items-center space-x-4 mb-2">
+                    <button class="text-gray-400 hover:text-white">
+                        <i class="fas fa-random"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="bg-white rounded-full p-2 hover:scale-105">
+                        <i class="fas fa-play text-black"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs text-gray-400">0:27</span>
+                    <div class="h-1 w-full bg-gray-700 rounded-full">
+                        <div class="h-1 bg-gray-400 rounded-full" style="width: 15%;"></div>
+                    </div>
+                    <span class="text-xs text-gray-400">3:20</span>
+                </div>
+            </div>
+            
+            <div class="w-1/4 flex justify-end items-center space-x-3">
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fas fa-list-ul"></i>
+                </button>
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fas fa-laptop"></i>
+                </button>
+                <div class="flex items-center">
+                    <i class="fas fa-volume-up text-gray-400 text-sm mr-2"></i>
+                    <div class="h-1 w-20 bg-gray-700 rounded-full">
+                        <div class="h-1 bg-gray-400 rounded-full" style="width: 70%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle like button functionality
+        document.querySelectorAll('.like-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const icon = button.querySelector('i');
+                if (icon.classList.contains('far')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas', 'active-like');
+                } else {
+                    icon.classList.remove('fas', 'active-like');
+                    icon.classList.add('far');
+                }
+            });
+        });
+        
+        // Simulate song selection
+        document.querySelectorAll('.song-row').forEach(row => {
+            row.addEventListener('click', () => {
+                const title = row.querySelector('p.font-medium').textContent;
+                const artist = row.querySelector('p.text-gray-400').textContent;
+                
+                document.querySelector('.player-song-title').textContent = title;
+                document.querySelector('.player-song-artist').textContent = artist;
+                
+                // In a real app, we'd also update the album art and playback
+            });
+        });
+    </script>
+</body>
+</html>
+

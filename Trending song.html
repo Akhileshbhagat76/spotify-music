@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Clone - Trending Song</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: #000000;
+            padding: 24px 16px;
+            overflow-y: auto;
+        }
+
+        .logo {
+            margin-bottom: 24px;
+            padding-left: 8px;
+        }
+
+        .logo svg {
+            fill: #ffffff;
+            width: 131px;
+            height: 40px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: #282828;
+        }
+
+        .nav-item i {
+            margin-right: 16px;
+            font-size: 20px;
+        }
+
+        .nav-item.active {
+            background-color: #282828;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: linear-gradient(#121212, #181818);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            background-color: #181818;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .user-profile img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .playlist-header {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 32px;
+        }
+
+        .playlist-image {
+            width: 232px;
+            height: 232px;
+            margin-right: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .playlist-info h1 {
+            font-size: 72px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+        }
+
+        .playlist-info p {
+            font-size: 14px;
+            color: #b3b3b3;
+            margin-bottom: 16px;
+        }
+
+        .playlist-actions {
+            display: flex;
+            align-items: center;
+            margin-top: 24px;
+        }
+
+        .play-btn {
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            margin-right: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .play-btn i {
+            font-size: 22px;
+            margin-left: 4px;
+        }
+
+        .secondary-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 16px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .secondary-btn:hover {
+            opacity: 1;
+        }
+
+        .songs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 48px;
+        }
+
+        .songs-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 400;
+            color: #b3b3b3;
+            border-bottom: 1px solid #282828;
+        }
+
+        .songs-table td {
+            padding: 16px;
+            border-bottom: 1px solid #282828;
+            font-size: 16px;
+        }
+
+        .song-num {
+            width: 50px;
+            text-align: center;
+            color: #b3b3b3;
+        }
+
+        .song-title {
+            display: flex;
+            align-items: center;
+        }
+
+        .song-img {
+            width: 40px;
+            height: 40px;
+            margin-right: 16px;
+        }
+
+        .song-details h4 {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .song-details p {
+            margin: 4px 0 0 0;
+            font-size: 14px;
+            color: #b3b3b3;
+        }
+
+        .song-artist {
+            color: #b3b3b3;
+        }
+
+        .song-album {
+            color: #b3b3b3;
+        }
+
+        .song-added {
+            color: #b3b3b3;
+            font-size: 14px;
+        }
+
+        .song-duration {
+            color: #b3b3b3;
+        }
+
+        .now-playing-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: #282828;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            border-top: 1px solid #404040;
+        }
+
+        .now-playing-info {
+            display: flex;
+            align-items: center;
+            width: 25%;
+        }
+
+        .now-playing-img {
+            width: 56px;
+            height: 56px;
+            margin-right: 16px;
+        }
+
+        .now-playing-details h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .now-playing-details p {
+            margin: 4px 0 0 0;
+            font-size: 12px;
+            color: #b3b3b3;
+        }
+
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 40%;
+        }
+
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            margin: 0 12px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .control-btn:hover {
+            opacity: 1;
+        }
+
+        .control-btn.main {
+            font-size: 32px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background-color: #535353;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 30%;
+            background-color: #fff;
+            border-radius: 2px;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            width: 25%;
+            justify-content: flex-end;
+        }
+
+        .volume-icon {
+            margin-right: 12px;
+            color: #fff;
+            opacity: 0.7;
+        }
+
+        .volume-bar {
+            width: 100px;
+            height: 4px;
+            background-color: #535353;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .volume-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 70%;
+            background-color: #fff;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .nav-item span {
+                display: none;
+            }
+
+            .nav-item i {
+                margin-right: 0;
+            }
+
+            .playlist-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .playlist-image {
+                width: 180px;
+                height: 180px;
+                margin-bottom: 20px;
+            }
+
+            .playlist-info h1 {
+                font-size: 48px;
+            }
+
+            .songs-table td {
+                padding: 12px 8px;
+            }
+
+            .song-img {
+                margin-right: 8px;
+            }
+
+            .song-details h4 {
+                font-size: 14px;
+            }
+
+
+
+
+
+
+            /* font-size: 24px;
+            /* Adjust size as needed */
+            /*margin: 0 10px;
+            /* Space between buttons */
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            /* Align items vertically */
+            width: 100%;
+            /* Full width */
+        }
+
+        #current-time,
+        #duration {
+            font-size: 14px;
+            /* Adjust size as needed */
+            margin: 0 10px;
+            /* Space around time labels */
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            /* Allow progress bar to grow */
+            background-color: #ddd;
+            /* Background color of the progress bar */
+            height: 5px;
+            /* Height of the progress bar */
+            border-radius: 5px;
+            /* Rounded corners */
+            position: relative;
+            /* Positioning for inner progress */
+        }
+
+        .progress {
+            background-color: #4caf50;
+            /* Color of the progress */
+            height: 100%;
+            /* Full height of the progress bar */
+            width: 0;
+            /* Start with 0 width */
+            border-radius: 5px;
+            /* Rounded corners */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="sidebar w-64 p-4 hidden md:block">
+            <div class="logo mb-8">
+                <img src="spotify.png" alt="Melodify logo in green with musical note icon" class="h-20 mx-auto" />
+            </div>
+            <nav class="space-y-6">
+                <div class="nav-item">
+                    <a href="index.html" class="flex items-center text-gray-300 hover:text-white">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z">
+                            </path>
+                        </svg>
+                        Home
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="flex items-center text-gray-300 hover:text-white">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                            <path fill-rule="evenodd"
+                                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        Browse
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="flex items-center text-gray-300 hover:text-white">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z">
+                            </path>
+                        </svg>
+                        Radio
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="user profile.html" class="flex items-center text-gray-300 hover:text-white">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 2a6 6 0 110 12A6 6 0 0110 4zM9.293 7.293a1 1 0 011.414 0l3.586 3.586a1 1 0 01-1.414 1.414L10 9.414l-2.879 2.879a1 1 0 01-1.414-1.414l3.586-3.586z">
+                            </path>
+                        </svg>
+                        User Profile
+                    </a>
+                </div>
+                <div class="pt-8">
+                    <div class="text-gray-500 text-sm uppercase mb-4">Your Library</div>
+                    <div class="space-y-4">
+                        <a href="Liked Songs.html" class="block text-gray-300 hover:text-white">Liked Songs</a>
+                        <a href="Recently Played.html" class="block text-gray-300 hover:text-white">Recently Played</a>
+                        <a href="Your Playlists.html" class="block text-gray-300 hover:text-white">Your Playlists</a>
+                        <a href="Followed Artists.html" class="block text-gray-300 hover:text-white">Followed
+                            Artists</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <div class="arrows">
+                    <a href="Dj night.html">
+                        <button class="secondary-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                    </a>
+                    <a href="Days of Love.html">
+                        <button class="secondary-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </a>
+                </div>
+
+                <div class="user-profile">
+                    <img src="user.png"
+                        alt="User profile picture - young adult with short hair and casual attire">
+                    <span>USER PROFILE</span>
+                </div>
+            </div>
+
+            <div class="playlist-header">
+                <img class="playlist-image" src="trending song.jpg"
+                    alt="Today's Top Hits playlist cover art featuring colorful abstract shapes with a modern geometric design">
+
+                <div class="playlist-info">
+
+                    <span style="font-size: 14px; font-weight: 600; text-transform: uppercase;">Playlist</span>
+                    <h1>Trending Songs</h1>
+                    <p>Current most popular songs worldwide, updated daily</p>
+
+
+                    <div style="display: flex; align-items: center; font-size: 14px;">
+                        <span style="font-weight: 600;">Spotify</span>
+                        <span style="margin: 0 8px;">•</span>
+                        <span>2,543,211 likes</span>
+                        <span style="margin: 0 8px;">•</span>
+                        <span>50 songs, <span style="color: #b3b3b3;">about 2 hr 30 min</span></span>
+                    </div>
+
+                    <div class="playlist-actions">
+                        <button class="play-btn">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="secondary-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button class="secondary-btn">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="songs-table">
+                <thead>
+                    <tr>
+                        <th class="song-num">#</th>
+                        <th>TITLE</th>
+                        <th>ALBUM</th>
+                        <th>DATE ADDED</th>
+                        <th></th>
+                        <th><i class="fas fa-clock"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- song 1 -->
+                    <tr data-src="songs/Laal Pari Housefull 5 128 Kbps (4).mp3">
+                        <td class="song-num">1</td>
+                        <td class="song-title">
+                            <img class="song-img" src="laal pari.jpg"
+                                alt="Song cover art for track 1 featuring neon lights">
+                            <div class="song-details">
+                                <h4>Laal Pari</h4>
+                                <p>Yo Yo Honey Singh</p>
+                            </div>
+                        </td>
+                        <td class="song-album">After Hours</td>
+                        <td class="song-added">3 days ago</td>
+                        <td></td>
+                        <td class="song-duration">3:20</td>
+                    </tr>
+                    <!-- song 2 -->
+                    <tr data-src="songs/Chandaniya Master Of Melody 128 Kbps.mp3">
+                        <td class="song-num">2</td>
+                        <td class="song-title">
+                            <img class="song-img" src="Chandaniya.jpg"
+                                alt="Song cover art for track 1 featuring neon lights">
+                            <div class="song-details">
+                                <h4>Chandaniya</h4>
+                                <p>Vishal Mishra</p>
+                            </div>
+                        </td>
+                        <td class="song-album">After Hours</td>
+                        <td class="song-added">5 days ago</td>
+                        <td></td>
+                        <td class="song-duration">3:36</td>
+                    </tr>
+                    <!-- song 3 -->
+                    <tr data-src="songs/Dil E Nadaan Housefull 5 128 Kbps.mp3">
+                        <td class="song-num">3</td>
+                        <td class="song-title">
+                            <img class="song-img" src="Dil E Nadaan.jpg"
+                                alt="Song cover art for track 1 featuring neon lights">
+                            <div class="song-details">
+                                <h4>Dil E Nadaan</h4>
+                                <p>Shweta Subram</p>
+                            </div>
+                        </td>
+                        <td class="song-album">After Hours</td>
+                        <td class="song-added">7 days ago</td>
+                        <td></td>
+                        <td class="song-duration">4:12</td>
+                    </tr>
+                    <!-- song  4-->
+                    <tr data-src="songs/Haqeeqat Akhil Sachdeva 128 Kbps.mp3">
+                        <td class="song-num">4</td>
+                        <td class="song-title">
+                            <img class="song-img" src="Haqeeqat.png"
+                                alt="Song cover art for track 1 featuring neon lights">
+                            <div class="song-details">
+                                <h4>Haqeeqat </h4>
+                                <p>Akhil Sachdeva </p>
+                            </div>
+                        </td>
+                        <td class="song-album">After Hours</td>
+                        <td class="song-added">12 days ago</td>
+                        <td></td>
+                        <td class="song-duration"> 2:12</td>
+                    </tr>
+                    <!-- song  5-->
+                    <tr data-src="songs/Ishq Mera Jubin Nautiyal 128 Kbps.mp3">
+                        <td class="song-num">5</td>
+                        <td class="song-title">
+                            <img class="song-img" src="Ishq Mera.jpg"
+                                alt="Song cover art for track 1 featuring neon lights">
+                            <div class="song-details">
+                                <h4>Ishq Mera </h4>
+                                <p>Jubin Nautiyal</p>
+                            </div>
+                        </td>
+                        <td class="song-album">After Hours</td>
+                        <td class="song-added">14 days ago</td>
+                        <td></td>
+                        <td class="song-duration">3:58</td>
+                    </tr>
+                    <!-- song  6-->
+                    <tr data-src="songs/Nachdi Son Of Sardaar 2 128 Kbps (1).mp3">
+                        <td class="song-num">6</td>
+                        <td class="song-title">
+                            <img class="song-img" src="Nachdi.jpg"
+                                alt="Song cover art for track 1 featuring neon lights">
+                            <div class="song-details">
+                                <h4>Nachdi </h4>
+                                <p> Mrunal Thakur </p>
+                            </div>
+                        </td>
+                        <td class="song-album">After Hours</td>
+                        <td class="song-added">1 days ago</td>
+                        <td></td>
+                        <td class="song-duration"> 3:30</td>
+                    </tr>
+                    <!-- song 7 -->
+                    <tr data-src="songs/Pehla Tu Duja Tu Son Of Sardaar 2 128 Kbps.mp3">
+                        <td class="song-num">7</td>
+                        <td class="song-title">
+                            <img class="song-img" src="Pehla Tu Duja Tu.jpg"
+                                alt="Song cover art for track 1 featuring neon lights">
+                            <div class="song-details">
+                                <h4>Pehla Tu Duja Tu </h4>
+                                <p>Vishal Mishra </p>
+                            </div>
+                        </td>
+                        <td class="song-album">After Hours</td>
+                        <td class="song-added">2 days ago</td>
+                        <td></td>
+                        <td class="song-duration"> 3:30</td>
+                    </tr>
+                    <!-- song  8-->
+                    <tr data-src="songs/Teri Yaadeinglory 128 Kbps.mp3">
+                        <td class="song-num">8</td>
+                        <td class="song-title">
+                            <img class="song-img" src="Teri Yaadeinglory.jpg"
+                                alt="Song cover art for track 1 featuring neon lights">
+                            <div class="song-details">
+                                <h4> Teri Yaadein</h4>
+                                <p>Glory</p>
+                            </div>
+                        </td>
+                        <td class="song-album">After Hours</td>
+                        <td class="song-added">7 days ago</td>
+                        <td></td>
+                        <td class="song-duration"> 3:40</td>
+                    </tr>
+                    <!-- song  9-->
+                    <tr data-src="songs/Tum Ho Toh Saiyaara 128 Kbps.mp3">
+                        <td class="song-num">9</td>
+                        <td class="song-title">
+                            <img class="song-img" src="Tum Ho Toh Saiyaara.jpg"
+                                alt="Song cover art for track 1 featuring neon lights">
+                            <div class="song-details">
+                                <h4>Tum Ho Toh Saiyaara</h4>
+                                <p>Vishal Mishra & Hansika Pareek </p>
+                            </div>
+                        </td>
+                        <td class="song-album">After Hours</td>
+                        <td class="song-added">12 days ago</td>
+                        <td></td>
+                        <td class="song-duration"> 3:18</td>
+                    </tr>
+                    <!-- song  10-->
+                    <tr data-src="songs/Shiddat Title Track-320kbps.mp3">
+                        <td class="song-num">10</td>
+                        <td class="song-title">
+                            <img class="song-img" src="Shiddat Title Track.jpg"
+                                alt="Song cover art for track 1 featuring neon lights">
+                            <div class="song-details">
+                                <h4>Shiddat Title Track</h4>
+                                <p>	Manan Bhardwaj</p>
+                            </div>
+                        </td>  
+                        <td class="song-album">After Hours</td>
+                        <td class="song-added">12 days ago</td>
+                        <td></td>
+                        <td class="song-duration"> 3:50</td>
+                    </tr>
+                     
+                </tbody>
+            </table>
+
+            <div class="now-playing-bar">
+                <div class="now-playing-info">
+                    <img id="now-playing-img" class="now-playing-img" src="laal pari.jpg"
+                        alt="Currently playing song cover art">
+                    <div class="now-playing-details">
+                        <h4 id="now-playing-title">Laal Pari</h4>
+                        <p id="now-playing-artist">Yo Yo Honey Singh</p>
+                    </div>
+                    
+                    <button class="secondary-btn">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+
+
+
+
+
+                <div class="player-controls">
+                    <div class="control-buttons">
+                        <button class="control-btn" id="shuffle"><i class="fas fa-random"></i></button>
+                        <button class="control-btn" id="prev"><i class="fas fa-step-backward"></i></button>
+                        <button class="control-btn main" id="play-pause"><i class="fas fa-play"></i></button>
+                        <button class="control-btn" id="next"><i class="fas fa-step-forward"></i></button>
+                        <button class="control-btn" id="repeat"><i class="fas fa-redo"></i></button>
+                    </div>
+
+                    <div class="progress-container">
+                        <span id="current-time">0:00</span>
+                        <div class="progress-bar" id="progress-bar">
+                            <div class="progress" id="progress"></div>
+                        </div>
+                        <span id="duration">0:00</span>
+                    </div>
+                </div>
+
+
+
+                <div class="volume-control">
+                    <i class="fas fa-volume-up volume-icon"></i>
+                    <div class="volume-bar">
+                        <div class="volume-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const audioPlayer = document.getElementById('audio-player');
+            const rows = Array.from(document.querySelectorAll('.songs-table tbody tr'));
+            const playPauseBtn = document.querySelector('.control-btn.main i');
+            const nextBtn = document.querySelector('.fa-step-forward').closest('button');
+            const prevBtn = document.querySelector('.fa-step-backward').closest('button');
+            const repeatBtn = document.querySelector('.fa-redo').closest('button');
+            const volumeBar = document.querySelector('.volume-bar');
+            const volumeProgress = document.querySelector('.volume-progress');
+            const volumeIcon = document.querySelector('.volume-icon');
+
+            function playSong(row) {
+                rows.forEach(r => r.classList.remove('active-song'));
+                row.classList.add('active-song');
+
+                const src = row.getAttribute('data-src');
+                const title = row.querySelector('.song-details h4')?.textContent || 'Unknown Title';
+                const artist = row.querySelector('.song-details p')?.textContent || 'Unknown Artist';
+                const cover = row.querySelector('img')?.src || 'https://placehold.co/56';
+
+                if (src) {
+                    audioPlayer.src = src;
+                    audioPlayer.play();
+
+                    // Update play/pause button
+                    playPauseBtn.classList.remove('fa-play');
+                    playPauseBtn.classList.add('fa-pause');
+
+                    // Update the now-playing bar
+                    document.getElementById('now-playing-title').textContent = title;
+                    document.getElementById('now-playing-artist').textContent = artist;
+                    document.getElementById('now-playing-img').src = cover;
+                }
+            }
+
+            function getCurrentIndex() {
+                return rows.findIndex(r => r.classList.contains('active-song'));
+            }
+
+            function playSongByIndex(index) {
+                if (index >= 0 && index < rows.length) {
+                    playSong(rows[index]);
+                }
+            }
+
+            function togglePlayPause() {
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                    playPauseBtn.classList.remove('fa-play');
+                    playPauseBtn.classList.add('fa-pause');
+                } else {
+                    audioPlayer.pause();
+                    playPauseBtn.classList.remove('fa-pause');
+                    playPauseBtn.classList.add('fa-play');
+                }
+            }
+
+            function nextSong() {
+                const currentIndex = getCurrentIndex();
+                playSongByIndex(currentIndex + 1);
+            }
+
+            function prevSong() {
+                const currentIndex = getCurrentIndex();
+                playSongByIndex(currentIndex - 1);
+            }
+
+            function repeatSong() {
+                audioPlayer.currentTime = 0;
+                audioPlayer.play();
+            }
+
+            // Event Listeners
+            rows.forEach(row => {
+                row.addEventListener('click', () => playSong(row));
+            });
+
+            playPauseBtn.parentElement.addEventListener('click', togglePlayPause);
+            nextBtn.addEventListener('click', nextSong);
+            prevBtn.addEventListener('click', prevSong);
+            repeatBtn.addEventListener('click', repeatSong);
+
+            audioPlayer.addEventListener('ended', () => {
+                const currentIndex = getCurrentIndex();
+                playSongByIndex(currentIndex + 1);
+            });
+
+            const progressBar = document.getElementById('progress-bar');
+            const progress = document.getElementById('progress');
+            const currentTimeEl = document.getElementById('current-time');
+            const durationEl = document.getElementById('duration');
+
+            function formatTime(seconds) {
+                const m = Math.floor(seconds / 60);
+                const s = Math.floor(seconds % 60);
+                return `${m}:${s < 10 ? '0' : ''}${s}`;
+            }
+
+            audioPlayer.addEventListener('timeupdate', () => {
+                if (!isNaN(audioPlayer.duration)) {
+                    const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                    progress.style.width = `${percent}%`;
+                    currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+                    durationEl.textContent = formatTime(audioPlayer.duration);
+                }
+            });
+
+            progressBar.addEventListener('click', (e) => {
+                const width = progressBar.clientWidth;
+                const clickX = e.offsetX;
+                const duration = audioPlayer.duration;
+
+                if (!isNaN(duration)) {
+                    audioPlayer.currentTime = (clickX / width) * duration;
+                }
+            });
+
+            // Volume Control
+            volumeBar.addEventListener('click', function (e) {
+                const rect = volumeBar.getBoundingClientRect();
+                const offsetX = e.clientX - rect.left;
+                const width = rect.width;
+                const volume = Math.min(Math.max(offsetX / width, 0), 1); // Ensure volume is between 0 and 1
+
+                // Update audio volume
+                audioPlayer.volume = volume;
+
+                // Update progress bar
+                volumeProgress.style.width = (volume * 100) + '%';
+
+                // Update mute icon based on volume
+                updateVolumeIcon(volume);
+            });
+
+            volumeIcon.addEventListener('click', () => {
+                audioPlayer.muted = !audioPlayer.muted;
+                updateVolumeIcon(audioPlayer.muted ? 0 : audioPlayer.volume);
+            });
+
+            function updateVolumeIcon(volume) {
+                if (volume === 0) {
+                    volumeIcon.className = 'fas fa-volume-mute volume-icon';
+                } else if (volume < 0.5) {
+                    volumeIcon.className = 'fas fa-volume-down volume-icon';
+                } else {
+                    volumeIcon.className = 'fas fa-volume-up volume-icon';
+                }
+            }
+
+            // Initialize volume
+            audioPlayer.volume = 0.8; // Set default volume
+            volumeProgress.style.width = (audioPlayer.volume * 100) + '%'; // Set initial volume progress
+            updateVolumeIcon(audioPlayer.volume); // Set initial volume icon
+        });
+
+    </script>
+
+
+    <audio id="audio-player" preload="metadata"></audio>
+
+</body>
+
+</html>
